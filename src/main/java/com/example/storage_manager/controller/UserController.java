@@ -25,8 +25,8 @@ public class UserController {
         try{
             User user = User.builder()
                     .username(dto.getUsername())
-                    .password(dto.getPassword())
                     .email(dto.getEmail())
+                    .password(dto.getPassword())
                     .build();
             User registerUser = userService.registerUser(user);
             return new ResponseEntity<>(registerUser, HttpStatus.CREATED);
