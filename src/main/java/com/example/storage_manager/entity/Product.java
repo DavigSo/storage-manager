@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
 @Entity
 @Table(name = "produtos")
 @Data
@@ -17,9 +19,19 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String name;
-    private String description;
-    private double price;
+
+    @Enumerated(EnumType.STRING)
+    private Category category;
+
+    @Enumerated(EnumType.STRING)
+    private Sex sex;
+
+    private Date ageUse;
     private int quantity;
+    private String description;
+    private int minAlert;
+    private boolean pendingAlert;
+
+
 }

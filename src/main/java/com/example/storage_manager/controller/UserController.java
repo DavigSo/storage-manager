@@ -1,6 +1,6 @@
 package com.example.storage_manager.controller;
 
-import com.example.storage_manager.dto.UserRegistrationDTO;
+import com.example.storage_manager.dto.UserResponseDTO;
 import com.example.storage_manager.entity.User;
 import com.example.storage_manager.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserRegistrationDTO dto){
+    public ResponseEntity<User> registerUser(@RequestBody UserResponseDTO dto){
         try{
             User user = User.builder()
                     .username(dto.getUsername())

@@ -6,6 +6,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Entity
 @Table(name = "usuarios")
 @Data
@@ -24,6 +26,7 @@ public class User {
     private String email;
     private String password;
 
-    private String role;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
 
 }

@@ -2,10 +2,14 @@ package com.example.storage_manager.dto;
 
 import lombok.Data;
 
-@Data
-public class UserRegistrationDTO {
+import java.util.List;
 
+@Data
+public class UserResponseDTO {
+
+    private Long id;
     private String username;
     private String email;
-    private String password;
+    private List<String> roles;
+
 }
