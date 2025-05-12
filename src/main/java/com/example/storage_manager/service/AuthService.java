@@ -44,6 +44,6 @@ public class AuthService {
         User user = userMapper.toEntity(dto);
         user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRoles(Collections.singletonList("USER"));
-        userRepository.save(user);
+        userRepository.save(user);  
     }
 }

@@ -9,6 +9,9 @@ import java.util.List;
 
 public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByCategory(Category category);
+    List<Product> findByCategoryAndSex(Category category, Sex sex);
     List<Product> findBySex(Sex sex);
     List<Product> findByQuantity(int minAlert);
+
+    List<Product> findByQuantityLessThan(int quantityIsLessThan);
 }
