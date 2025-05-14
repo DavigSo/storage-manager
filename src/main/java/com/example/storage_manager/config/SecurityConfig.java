@@ -1,10 +1,12 @@
 package com.example.storage_manager.config;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -13,9 +15,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
-    private final JwtAuthFilter jwtAuthFilter;
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
-        this.jwtAuthFilter = jwtAuthFilter;
+    @Value("${spring.security.jwt.secret}")
+    private String jwtSecret;
+
+    @Bean
+    public JwtAuthFilter jwtAuthFilter(UserDetailsService userDetailsService) {
+        // aqui o Spring injeta o UserDetailsService já resolvido,
+        // sem precisar do construtor da própria SecurityConfig
+        return new JwtAuthFilter(userDetailsService, jwtSecret);
     }
 
     @Bean
@@ -32,7 +39,8 @@ public class SecurityConfig {
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
 
-        http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+        // aqui você usa o bean jwtAuthFilter() sem precisar armazená‑lo num campo
+        http.addFilterBefore(jwtAuthFilter(null), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

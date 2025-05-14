@@ -5,6 +5,8 @@ import com.example.storage_manager.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserService {
 
@@ -17,15 +19,18 @@ public class UserService {
     }
 
     public User registerUser(User user) {
-        user.setEmail(user.getEmail());
+        // Verifica se o email já está registrado (opcional, mas recomendado)
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
+            throw new RuntimeException("Email já registrado");
+        }
+
         user.setPassword(passwordEncoder.encode(user.getPassword()));
 
-        if(user.getRole() == null) {
-
-            user.setRole("ROLE_USER");
+        // Define os roles como uma lista, se estiver nulo
+        if (user.getRoles() == null || user.getRoles().isEmpty()) {
+            user.setRoles(List.of("ROLE_USER")); // Corrige o erro usando List.of
         }
         return userRepository.save(user);
-
     }
 
     public User findByUsername(String username) {
@@ -36,14 +41,12 @@ public class UserService {
         return userRepository.findByEmail(email).orElse(null);
     }
 
-   /** public User login(String email, String password) {
+    public User login(String email, String password) {
         User user = findByEmail(email);
-        if(passwordEncoder.matches(password, user.getPassword())) {
-
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
             return user;
-
         } else {
             return null;
         }
-    } **/
+    }
 }

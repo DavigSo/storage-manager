@@ -1,8 +1,10 @@
 package com.example.storage_manager.controller;
 
+import com.example.storage_manager.dto.UserRegisterDTO;
 import com.example.storage_manager.dto.UserResponseDTO;
 import com.example.storage_manager.entity.User;
 import com.example.storage_manager.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -21,18 +23,18 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<User> registerUser(@RequestBody UserResponseDTO dto){
-        try{
-            User user = User.builder()
-                    .username(dto.getUsername())
-                    .email(dto.getEmail())
-                    .password(dto.getPassword())
-                    .build();
-            User registerUser = userService.registerUser(user);
-            return new ResponseEntity<>(registerUser, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+    public ResponseEntity<UserResponseDTO> registerUser(@Valid @RequestBody UserRegisterDTO dto) {
+        User user = User.builder()
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .password(dto.getPassword())
+                .build();
+        User savedUser = userService.registerUser(user);
+        UserResponseDTO response = new UserResponseDTO();
+        response.setId(savedUser.getId());
+        response.setUsername(savedUser.getUsername());
+        response.setEmail(savedUser.getEmail());
+        response.setRoles(savedUser.getRoles());
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
 }
